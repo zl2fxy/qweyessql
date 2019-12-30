@@ -41,6 +41,7 @@ namespace YesSql
         Task<IEnumerable<T>> ListAsync();
         IAsyncEnumerable<T> ToAsyncEnumerable();
         Task<int> CountAsync();
+
     }
 
     /// <summary>
