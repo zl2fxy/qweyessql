@@ -6,6 +6,13 @@ namespace YesSql
 {
     public static class QueryExtensions
     {
+
+        //{{ * qwe新增修改
+        public static IQuery<T> Query<T>(this ISession session,string contentType) where T : class
+        {
+            return session.Query().For<T>().BindIndexTable(contentType);
+        }
+        //修改结束 * }}
         public static IQuery<T> Query<T>(this ISession session) where T : class
         {
             return session.Query().For<T>();

@@ -1,5 +1,6 @@
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -983,6 +984,41 @@ namespace YesSql
                     }
                 }
             }
+
+            //{{ * qwe新增修改
+
+            var ObjType = obj.GetType().Name;
+
+            if (ObjType == "ContentItem")
+            {
+                var objGetType = JObject.FromObject(obj);
+                var ContentType = objGetType.GetValue("ContentType").ToString();
+                var Content = objGetType.GetValue(ContentType + "Copy");
+
+                if (Content == null || ContentType == "ContentItemLiquid" || ContentType == "HttpRequest") { }
+                else
+                {
+
+                    var List = new List<ContentItemHelper>();
+                    List.Add(new ContentItemHelper { ColumnName = "ContentItemId", ColumnValue = "'" + objGetType.GetValue("ContentItemId").ToString() + "'" });
+                    List.Add(new ContentItemHelper { ColumnName = "ContentItemVersionId", ColumnValue = "'" + objGetType.GetValue("ContentItemVersionId").ToString() + "'" });
+                    List.Add(new ContentItemHelper { ColumnName = "Published", ColumnValue = objGetType.GetValue("Published") });
+                    List.Add(new ContentItemHelper { ColumnName = "Latest", ColumnValue = objGetType.GetValue("Latest") });
+                    List.Add(new ContentItemHelper { ColumnName = "CreatedUtc", ColumnValue = "'" + objGetType.GetValue("CreatedUtc") + "'" });
+
+                    foreach (JProperty item in Content?.Children())
+                    {
+                        List.Add(new ContentItemHelper
+                        {
+                            ColumnName = item.Name,
+                            ColumnValue = item.Value
+                        });
+                    }
+                    _commands.Add(new QweCreateMapIndexCommand(List, _tablePrefix, document, ContentType));
+                }
+            }
+
+            //修改结束 * }}
         }
 
         /// <summary>
@@ -1019,6 +1055,18 @@ namespace YesSql
                     }
                 }
             }
+
+            //{{ * qwe新增修改
+            var ObjType = obj.GetType().Name;
+
+            if (ObjType == "ContentItem")
+            {
+                var objGetType = obj.GetType();
+                var Properties = objGetType.GetProperties().ToArray();
+                var ContentType = Properties.FirstOrDefault(x => x.Name == "ContentType")?.GetValue(obj);
+                _commands.Add(new QweDeleteMapIndexCommand(ContentType.ToString(), document.Id, _tablePrefix, _dialect));
+            }
+            //修改结束 * }}
         }
 
         /// <summary>

@@ -42,6 +42,47 @@ namespace YesSql
         IAsyncEnumerable<T> ToAsyncEnumerable();
         Task<int> CountAsync();
 
+        //{{ * qwe新增修改
+        /// <summary>
+        /// 添加绑定Index
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        IQuery<T> BindIndexTable(string tableName);
+        /// <summary>
+        /// 添加SQL where语句支持
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        IQuery<T> QweWhere(string sql);
+        /// <summary>
+        /// 添加SQL OrderBy语句支持
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        IQuery<T> QweOrderBy(string keySelector);
+        /// <summary>
+        /// 添加SQL OrderByDescending语句支持
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        IQuery<T> QweOrderByDescending(string keySelector);
+        /// <summary>
+        /// 添加SQL ThenBy语句支持
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        IQuery<T> QweThenBy(string keySelector);
+        /// <summary>
+        /// 添加SQL ThenByDescending语句支持
+        /// </summary>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        IQuery<T> QweThenByDescending(string keySelector);
+
+        //修改结束 * }}
+
+
     }
 
     /// <summary>

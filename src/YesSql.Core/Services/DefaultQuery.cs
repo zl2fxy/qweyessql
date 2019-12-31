@@ -1092,6 +1092,42 @@ namespace YesSql.Services
                 _query.Filter(predicate);
                 return new Query<T, TIndex>(_query);
             }
+
+            //{{ * qwe新增修改
+            IQuery<T> IQuery<T>.BindIndexTable(string tableName)
+            {
+                _query._queryState._sqlBuilder.InnerJoin(tableName, tableName, "DocumentId", _query._queryState._documentTable, "Id");
+                return this;
+            }
+            IQuery<T> IQuery<T>.QweWhere(string sql)
+            {
+                _query._queryState._sqlBuilder.WhereAlso(sql);
+                return this;
+            }
+            IQuery<T> IQuery<T>.QweOrderBy(string keySelector)
+            {
+                _query._queryState._sqlBuilder.OrderBy(keySelector);
+                return this;
+            }
+
+            public IQuery<T> QweOrderByDescending(string keySelector)
+            {
+                _query._queryState._sqlBuilder.OrderByDescending(keySelector);
+                return this;
+            }
+
+            public IQuery<T> QweThenBy(string keySelector)
+            {
+                _query._queryState._sqlBuilder.ThenOrderBy(keySelector);
+                return this;
+            }
+
+            public IQuery<T> QweThenByDescending(string keySelector)
+            {
+                _query._queryState._sqlBuilder.ThenOrderByDescending(keySelector);
+                return this;
+            }
+            //修改结束 * }}
         }
 
         class QueryIndex<T> : Query<T>, IQueryIndex<T> where T : class, IIndex
